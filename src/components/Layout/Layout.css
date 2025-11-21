@@ -1,0 +1,66 @@
+.layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.layout-content {
+  flex: 1;
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  min-width: 0;
+  position: relative;
+}
+
+.layout-content > div:first-child, .layout-content > div:last-child {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 3.5px solid transparent;
+  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), linear-gradient(135deg, #6E2BF8 0%, #693070 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+
+.layout-content.horizontal {
+  flex-direction: row;
+}
+
+.layout-content.vertical {
+  flex-direction: column;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .layout {
+    position: relative;
+  }
+
+  .layout-content {
+    flex-direction: column;
+  }
+
+  .layout-content.horizontal {
+    flex-direction: column;
+  }
+}
+
+/* Resizable panes (optional enhancement) */
+.layout-content > * {
+  flex: 1;
+}
+
+@media (min-width: 769px) {
+  .layout-content.horizontal > *:first-child {
+    max-width: 60%;
+    min-width: 30%;
+  }
+
+  .layout-content.vertical > *:first-child {
+    max-height: 70%;
+    min-height: 30%;
+  }
+}
