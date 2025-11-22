@@ -24,6 +24,7 @@ import {
   ChevronDown,
   Menu,
   X,
+  Book,
 } from "lucide-react";
 import type { SidebarOption } from "../../types/index";
 import { useTheme } from "../../context/ThemeContext";
@@ -68,6 +69,7 @@ const iconMap: { [key: string]: any } = {
   Info,
   Menu,
   X,
+  Book,
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ config, onAction }) => {
@@ -122,9 +124,8 @@ const Sidebar: React.FC<SidebarProps> = ({ config, onAction }) => {
     return (
       <li key={option.id} className="sidebar-item">
         <button
-          className={`sidebar-button level-${level} ${
-            hasSubmenu ? "has-submenu" : ""
-          }`}
+          className={`sidebar-button level-${level} ${hasSubmenu ? "has-submenu" : ""
+            }`}
           onClick={() => {
             if (hasSubmenu) {
               toggleExpanded(option.id);
