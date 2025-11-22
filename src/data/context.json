@@ -81,7 +81,7 @@
       {
         "id": "templates",
         "label": "Ejemplos",
-        "icon": "FileCode",
+        "icon": "Code",
         "submenu": [
           {
             "id": "template-basic",
@@ -100,13 +100,19 @@
             "label": "Tailwind CSS",
             "icon": "Wind",
             "action": "load-template-tailwind"
+          },
+          {
+            "id": "template-dynamic-rain",
+            "label": "Ejercicio Lluvia Dinámica",
+            "icon": "Cloud", 
+            "action": "load-template-dynamic-rain"
           }
         ]
       },
       {
         "id": "help",
-        "label": "Ayuda",
-        "icon": "HelpCircle",
+        "label": "Documentación",
+        "icon": "BookOpen",
         "submenu": [
           {
             "id": "shortcuts",

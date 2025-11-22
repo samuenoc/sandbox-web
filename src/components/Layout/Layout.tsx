@@ -15,6 +15,15 @@ const Layout: React.FC<LayoutProps> = ({ config }) => {
   const [layoutMode, setLayoutMode] = useState<'horizontal' | 'vertical'>('horizontal');
   const [fontSize, setFontSize] = useState(config.editor.fontSize);
   const [wordWrap, setWordWrap] = useState<'on' | 'off'>(config.editor.wordWrap);
+//   //sidebar colapsado
+//   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+//   //funcion sidebar estado
+//   const toggleSidebar = () => {
+//   setIsSidebarCollapsed(prev => !prev);
+// };
+
+
 
   const handleAction = (action: string) => {
     switch (action) {
@@ -151,6 +160,58 @@ body {
         });
         break;
       
+      case 'load-template-dynamic-rain':
+  setContent({
+    html: `<canvas id="rainCanvas"></canvas>`,
+    css: `body, html { margin: 0; padding: 0; overflow: hidden; background: #000; }
+#rainCanvas { display: block; width: 100vw; height: 100vh; }`,
+    javascript: `const canvas = document.getElementById('rainCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+class Drop {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.length = 10 + Math.random() * 20;
+    this.speed = 4 + Math.random() * 4;
+  }
+  fall() {
+    this.y += this.speed;
+    if (this.y > canvas.height) {
+      this.y = 0;
+      this.x = Math.random() * canvas.width;
+    }
+  }
+  draw() {
+    ctx.strokeStyle = 'rgba(0, 150, 255, 0.7)';
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y);
+    ctx.lineTo(this.x, this.y + this.length);
+    ctx.stroke();
+    this.fall();
+  }
+}
+
+const drops = Array.from({length: 150}, () => new Drop());
+
+function animate() {
+  ctx.fillStyle = 'rgba(0,0,0,0.1)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drops.forEach(drop => drop.draw());
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});`
+  });
+  break;
+
       case 'show-shortcuts':
         alert(`Keyboard Shortcuts:
         
@@ -179,7 +240,8 @@ Built with React, TypeScript, and Monaco Editor.
 
   return (
     <div className="layout">
-      <Sidebar config={{ ...config.sidebar, toggle: config.toggle, subtitle: config.sidebar.subtitle }} onAction={handleAction} />
+      {/* <Sidebar config={{ ...config.sidebar, toggle: config.toggle, subtitle: config.sidebar.subtitle }} onAction={handleAction} /> */}
+      <Sidebar config={{ ...config.sidebar, subtitle: config.sidebar.subtitle }} onAction={handleAction} />
       <div className={`layout-content ${layoutMode}`}>
         <Editor
           content={content}

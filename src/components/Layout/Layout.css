@@ -15,14 +15,36 @@
   position: relative;
 }
 
+/* keyframe */
+@keyframes borde-neon {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.layout-content > div:first-child,
+.layout-content > div:last-child {
+  background-size: 300% 300%;
+}
+
 .layout-content > div:first-child, .layout-content > div:last-child {
   border-radius: 8px;
   overflow: hidden;
   border: 3.5px solid transparent;
-  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), linear-gradient(135deg, #6E2BF8 0%, #693070 100%);
+  /* background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), linear-gradient(135deg, #6E2BF8 0%, #693070 100%); */
+  background-image: linear-gradient(var(--gradiante-uno), var(--gradiante-dos)),
+                    linear-gradient(270deg, var(--gradiante-uno), var(--gradiante-dos), #00fff2);
   background-origin: border-box;
   background-clip: padding-box, border-box;
+  animation: borde-neon 3s linear infinite;
 }
+
 
 
 .layout-content.horizontal {
