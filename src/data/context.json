@@ -127,6 +127,12 @@
             "action": "show-about"
           }
         ]
+      },
+      {
+        "id": "documentation",
+        "label": "Documentación",
+        "icon": "Book",
+        "action": "navigate-documentation"
       }
     ]
   },

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Layout from './components/Layout/Layout';
+import Sandbox from './components/Sandbox/Sandbox';
+import DocumentationPage from './components/Documentation/DocumentationPage';
 import type { ContextConfig } from './types';
 import contextData from './data/context.json';
 import './App.css';
@@ -44,7 +47,12 @@ const App: React.FC = () => {
   return (
     <ThemeProvider>
       <div className="app">
-        <Layout config={config} />
+        <Routes>
+          <Route element={<Layout config={config} />}>
+            <Route path="/" element={<Sandbox config={config} />} />
+            <Route path="/documentation" element={<DocumentationPage />} />
+          </Route>
+        </Routes>
       </div>
     </ThemeProvider>
   );

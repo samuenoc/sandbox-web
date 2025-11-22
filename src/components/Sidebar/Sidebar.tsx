@@ -78,6 +78,7 @@ const iconMap: { [key: string]: any } = {
   Cloud,
   Code,
   X,
+  Book,
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ config, onAction }) => {

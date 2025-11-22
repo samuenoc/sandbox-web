@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from '../Sidebar/Sidebar';
-import Editor from '../Editor/Editor';
-import Preview from '../Preview/Preview';
-import type { EditorContent, ContextConfig } from '../../types';
+import type { ContextConfig } from '../../types';
 import './Layout.css';
 
 interface LayoutProps {
@@ -236,6 +235,10 @@ Built with React, TypeScript, and Monaco Editor.
       default:
         console.log('Unknown action:', action);
     }
+
+    // Pass other actions to the Outlet via context
+    // We use a timestamp to ensure the same action can be triggered multiple times
+    setLastAction({ action, timestamp: Date.now() });
   };
 
   return (
