@@ -7,6 +7,8 @@ import DocumentationPage from './components/Documentation/DocumentationPage';
 import type { ContextConfig } from './types';
 import contextData from './data/context.json';
 import './App.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 const App: React.FC = () => {
   const [config, setConfig] = useState<ContextConfig | null>(null);
