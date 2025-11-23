@@ -200,7 +200,7 @@ const Sidebar: React.FC<SidebarProps> = ({ config, onAction }) => {
                   <img
                     src="/icon.png"
                     alt="Logo"
-                    className="sidebar-logo"
+                    // className="sidebar-logo"
                     style={{ width: '50px' }}
                   />
                 </div>
@@ -222,8 +222,7 @@ const Sidebar: React.FC<SidebarProps> = ({ config, onAction }) => {
               <img
                 src="/icon.png"
                 alt="Logo"
-                className="sidebar-logo"
-                style={{ width: '50px' }}
+                // className="sidebar-logo"
               />
             </div>
           )}

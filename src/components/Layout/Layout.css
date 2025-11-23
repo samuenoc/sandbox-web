@@ -30,19 +30,17 @@
   }
 }
 
-.layout-content>div:first-child,
-.layout-content>div:last-child {
+.layout-content>.editor-container, .layout-content>.preview-container{
   background-size: 300% 300%;
   border-radius: 8px;
   overflow: hidden;
   border: 3.5px solid transparent;
-  /* Default reactive background for editor panes */
   background-image: linear-gradient(var(--gradiante-uno), var(--gradiante-dos)),
     linear-gradient(270deg, var(--gradiante-uno), var(--gradiante-dos), #00fff2);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   animation: borde-neon 3s linear infinite;
-}
+} 
 
 /* Override for documentation page - no animated gradient, just solid background */
 .layout-content>.documentation-page {
