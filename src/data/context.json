@@ -104,29 +104,35 @@
           {
             "id": "template-dynamic-rain",
             "label": "Ejercicio Lluvia Dinámica",
-            "icon": "Cloud", 
+            "icon": "Cloud",
             "action": "load-template-dynamic-rain"
           }
         ]
       },
       {
         "id": "help",
-        "label": "Documentación",
+        "label": "Ayuda",
         "icon": "BookOpen",
         "submenu": [
           {
             "id": "shortcuts",
-            "label": "Keyboard Shortcuts",
+            "label": "Atajos",
             "icon": "Keyboard",
             "action": "show-shortcuts"
           },
           {
             "id": "about",
-            "label": "About",
+            "label": "Acerca de",
             "icon": "Info",
             "action": "show-about"
           }
         ]
+      },
+      {
+        "id": "documentation",
+        "label": "Documentación",
+        "icon": "Book",
+        "action": "navigate-documentation"
       }
     ]
   },

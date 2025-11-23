@@ -22,9 +22,12 @@ const Editor: React.FC<EditorProps> = ({
   wordWrap = 'on'
 }) => {
   const { theme, editorTheme } = useTheme();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const editorRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const monacoRef = useRef<any>(null);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEditorDidMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
@@ -153,7 +156,7 @@ const Editor: React.FC<EditorProps> = ({
           </button>
         </div>
         <div className="editor-actions">
-          <button 
+          <button
             className="editor-action-btn"
             onClick={formatCode}
             title="Format Code (Alt+Shift+F)"

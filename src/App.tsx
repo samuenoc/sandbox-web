@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Layout from './components/Layout/Layout';
+import Sandbox from './components/Sandbox/Sandbox';
+import DocumentationPage from './components/Documentation/DocumentationPage';
 import type { ContextConfig } from './types';
 import contextData from './data/context.json';
 import './App.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 
 const App: React.FC = () => {
@@ -15,9 +18,10 @@ const App: React.FC = () => {
   useEffect(() => {
     try {
       // In a real app, you might fetch this from an API
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setConfig(contextData as ContextConfig);
       setLoading(false);
-    } catch (err) {
+    } catch {
       setError('Failed to load configuration');
       setLoading(false);
     }
@@ -44,7 +48,12 @@ const App: React.FC = () => {
   return (
     <ThemeProvider>
       <div className="app">
-        <Layout config={config} />
+        <Routes>
+          <Route element={<Layout config={config} />}>
+            <Route path="/" element={<Sandbox config={config} />} />
+            <Route path="/documentation" element={<DocumentationPage />} />
+          </Route>
+        </Routes>
       </div>
     </ThemeProvider>
   );

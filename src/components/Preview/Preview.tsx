@@ -11,7 +11,7 @@ const Preview: React.FC<PreviewProps> = ({ content, refreshDelay = 500 }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const cleanHTML = useCallback((html: string): string => {
     // Remove DOCTYPE, html, head, body tags if they exist
@@ -23,7 +23,7 @@ const Preview: React.FC<PreviewProps> = ({ content, refreshDelay = 500 }) => {
       .replace(/<body[^>]*>/gi, '')
       .replace(/<\/body>/gi, '')
       .trim();
-    
+
     // If the HTML still contains a title tag, extract just the body content
     if (cleaned.includes('<title>')) {
       const bodyMatch = cleaned.match(/<body[^>]*>([\s\S]*)<\/body>/i);
@@ -31,7 +31,7 @@ const Preview: React.FC<PreviewProps> = ({ content, refreshDelay = 500 }) => {
         cleaned = bodyMatch[1].trim();
       }
     }
-    
+
     return cleaned;
   }, []);
 
@@ -115,7 +115,7 @@ const Preview: React.FC<PreviewProps> = ({ content, refreshDelay = 500 }) => {
 
       // Write to iframe
       const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-      
+
       if (!iframeDoc) {
         setError('Cannot access iframe document');
         setIsLoading(false);
@@ -143,6 +143,7 @@ const Preview: React.FC<PreviewProps> = ({ content, refreshDelay = 500 }) => {
       clearTimeout(timeoutRef.current);
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
     setError(null);
 
@@ -193,7 +194,7 @@ const Preview: React.FC<PreviewProps> = ({ content, refreshDelay = 500 }) => {
     const blob = new Blob([fullDocument], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     window.open(url, '_blank', 'width=800,height=600');
-    
+
     // Clean up the URL after a delay
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
@@ -208,21 +209,21 @@ const Preview: React.FC<PreviewProps> = ({ content, refreshDelay = 500 }) => {
           {error && <span className="preview-error" title={error}>Error</span>}
         </div>
         <div className="preview-actions">
-          <button 
+          <button
             className="preview-action-btn"
             onClick={handleRefresh}
             title="Refresh Preview (F5)"
           >
             ↻
           </button>
-          <button 
+          <button
             className="preview-action-btn"
             onClick={handleNewWindow}
             title="Open in New Window"
           >
             ⧉
           </button>
-          <button 
+          <button
             className="preview-action-btn"
             onClick={handleFullscreen}
             title="Fullscreen (F11)"
