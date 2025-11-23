@@ -20,7 +20,6 @@ export interface ThemeContextType {
 }
 
 export interface ContextConfig {
-  // toggle: Toggle | undefined;
   sidebar: {
     title: string;
     subtitle?: string;
@@ -40,5 +39,10 @@ export interface ContextConfig {
   preview: {
     refreshDelay: number;
   };
-  
+  toggle?: {
+    id: string;
+    label: string;
+    icon: string;
+    action: string;
+  };
 }

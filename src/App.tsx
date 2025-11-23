@@ -7,7 +7,7 @@ import DocumentationPage from './components/Documentation/DocumentationPage';
 import type { ContextConfig } from './types';
 import contextData from './data/context.json';
 import './App.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 
 const App: React.FC = () => {
@@ -18,9 +18,10 @@ const App: React.FC = () => {
   useEffect(() => {
     try {
       // In a real app, you might fetch this from an API
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setConfig(contextData as ContextConfig);
       setLoading(false);
-    } catch (err) {
+    } catch {
       setError('Failed to load configuration');
       setLoading(false);
     }

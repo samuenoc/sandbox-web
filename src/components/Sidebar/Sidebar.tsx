@@ -28,10 +28,12 @@ import {
   BookOpen,
   Terminal,
   Cloud,
-  Code
+  Code,
+  Book
 } from "lucide-react";
 import type { SidebarOption } from "../../types/index";
 import { useTheme } from "../../context/ThemeContext";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 
 interface Toggle {
@@ -51,7 +53,7 @@ interface SidebarProps {
   onAction: (action: string) => void;
 }
 
-const iconMap: { [key: string]: any } = {
+const iconMap: { [key: string]: React.ElementType } = {
   File,
   FilePlus,
   Save,
@@ -86,6 +88,8 @@ const Sidebar: React.FC<SidebarProps> = ({ config, onAction }) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleExpanded = (id: string) => {
     setExpandedItems((prev) => {
@@ -100,13 +104,33 @@ const Sidebar: React.FC<SidebarProps> = ({ config, onAction }) => {
   };
 
   const handleAction = (action: string) => {
-    if (action === "toggle-theme") {
-      toggleTheme();
+    // If on documentation page and action is not navigate-documentation, go to root first
+    if (location.pathname === '/documentation' && action !== 'navigate-documentation') {
+      navigate('/');
+      // Delay the action slightly to allow navigation to complete
+      setTimeout(() => {
+        if (action === "toggle-theme") {
+          toggleTheme();
+        } else {
+          onAction(action);
+        }
+      }, 100);
     } else {
-      onAction(action);
+      if (action === "toggle-theme") {
+        toggleTheme();
+      } else {
+        onAction(action);
+      }
     }
     if (window.innerWidth < 768) {
       setIsMobileOpen(false);
+    }
+  };
+
+  const handleLogoClick = () => {
+    navigate('/');
+    if (isCollapsed) {
+      setIsCollapsed(false);
     }
   };
 
@@ -116,18 +140,8 @@ const Sidebar: React.FC<SidebarProps> = ({ config, onAction }) => {
     const isExpanded = expandedItems.has(option.id);
 
     if (option.id === "theme-toggle") {
-      const ThemeIcon = theme === "light" ? Moon : Sun;
-      return (
-        <li key={option.id} className="sidebar-item">
-          <button
-            className={`sidebar-button level-${level}`}
-            onClick={() => handleAction(option.action || "")}
-          >
-            <ThemeIcon size={18} stroke="url(#sidebarGradient)" />
-            {!isCollapsed && <span>{theme === "light" ? "Dark Mode" : "Light Mode"}</span>}
-          </button>
-        </li>
-      );
+      // Skip rendering the theme toggle in the menu if it's there
+      return null;
     }
 
     return (
@@ -178,72 +192,52 @@ const Sidebar: React.FC<SidebarProps> = ({ config, onAction }) => {
       </button>
 
       <aside className={`sidebar ${isMobileOpen ? "mobile-open" : ""} ${isCollapsed ? "collapsed" : ""}`}>
-        {/* <div className="sidebar-header">
+        <div className="sidebar-header">
           {!isCollapsed ? (
             <>
-              <h2>{config.title}</h2>
-              <h4>{config.subtitle}</h4>
+              <div className="header-content">
+                <div className="header-icon" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+                  <img
+                    src="/icon.png"
+                    alt="Logo"
+                    className="sidebar-logo"
+                    style={{ width: '50px' }}
+                  />
+                </div>
+                <div className="header-text">
+                  <h2>{config.title}</h2>
+                  <h4>{config.subtitle}</h4>
+                </div>
+              </div>
+              <button className="collapse-btn" onClick={() => setIsCollapsed(true)}>
+                <ChevronLeft size={20} />
+              </button>
             </>
           ) : (
-            <div className="collapsed-icon">
-              <FileCode size={24} />
+            <div
+              className="collapsed-icon"
+              onClick={handleLogoClick}
+              style={{ cursor: 'pointer' }}
+            >
+              <img
+                src="/icon.png"
+                alt="Logo"
+                className="sidebar-logo"
+                style={{ width: '50px' }}
+              />
             </div>
           )}
-          <button className="collapse-btn" onClick={() => setIsCollapsed(prev => !prev)}>
-            {isCollapsed ? <Menu size={20} /> : <ChevronLeft size={20} />}
-          </button>
-        </div> */}
-          <div className="sidebar-header">
-            {!isCollapsed ? (
-              <>
-                <div className="header-content">
-                  <div className="header-icon">
-                    {/* <FileCode size={24} /> */}
-                     <img
-                      src="/public/icon.png"
-                      alt="Logo"
-                      className="sidebar-logo"
-                      style={{width:'50px'}}
-                    />
-                  </div>
-                  <div className="header-text">
-                    <h2>{config.title}</h2>
-                    <h4>{config.subtitle}</h4>
-                  </div>
-                </div>
-                <button className="collapse-btn" onClick={() => setIsCollapsed(true)}>
-                  <ChevronLeft size={20} />
-                </button>
-              </>
-            ) : (
-              <div 
-                className="collapsed-icon" 
-                onClick={() => setIsCollapsed(false)} 
-                style={{ cursor: 'pointer' }}
-              >
-                {/* <FileCode size={24} /> */}
-                <img
-                  src="/public/icon.png"
-                  alt="Logo"
-                  className="sidebar-logo"
-                  style={{width:'50px'}}
-                />
-              
-              </div>
-            )}
-          </div>
+        </div>
 
+        {!isCollapsed && (
+          <>
+            <nav className="sidebar-nav">
+              <ul className="sidebar-menu">{config.options.map((option) => renderOption(option))}</ul>
+            </nav>
 
-
-        <nav className="sidebar-nav">
-          <ul className="sidebar-menu">{config.options.map((option) => renderOption(option))}</ul>
-        </nav>
-
-        <div className="sidebar-footer">
-          {config.toggle ? (
-            <div className="footer-toggle">
-              {!isCollapsed && (
-                <>
+            <div className="sidebar-footer">
+              {config.toggle ? (
+                <div className="footer-toggle">
                   <div className="toggle-label">
                     {theme === "light" ? (
                       <Sun size={18} stroke="url(#sidebarGradient)" />
@@ -264,17 +258,16 @@ const Sidebar: React.FC<SidebarProps> = ({ config, onAction }) => {
                   >
                     <span className="switch-knob" />
                   </button>
-                </>
+                </div>
+              ) : (
+                <p>Hecho por UNAH</p>
               )}
             </div>
-          ) : (
-            !isCollapsed && <p>Made with UNAH</p>
-          )}
-        </div>
+          </>
+        )}
       </aside>
     </>
   );
 };
 
 export default Sidebar;
-

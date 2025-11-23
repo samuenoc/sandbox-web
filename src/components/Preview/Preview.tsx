@@ -143,6 +143,7 @@ const Preview: React.FC<PreviewProps> = ({ content, refreshDelay = 500 }) => {
       clearTimeout(timeoutRef.current);
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
     setError(null);
 

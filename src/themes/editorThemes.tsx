@@ -402,6 +402,7 @@ export const editorThemes: EditorTheme[] = [
 ];
 
 // Function to register all custom themes
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function registerEditorThemes(monaco: any) {
   editorThemes.forEach(theme => {
     if (theme.id !== 'vs' && theme.id !== 'vs-dark' && theme.id !== 'hc-black') {

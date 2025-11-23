@@ -3,6 +3,8 @@ import Editor from '../Editor/Editor';
 import Preview from '../Preview/Preview';
 import type { EditorContent, ContextConfig } from '../../types';
 import '../Layout/Layout.css'; // Reuse Layout styles for now or move them
+import { useOutletContext } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 interface SandboxProps {
     config: ContextConfig;
@@ -15,44 +17,35 @@ const Sandbox: React.FC<SandboxProps> = ({ config }) => {
     const [fontSize, setFontSize] = useState(config.editor.fontSize);
     const [wordWrap, setWordWrap] = useState<'on' | 'off'>(config.editor.wordWrap);
 
-    // We need to expose a way to handle actions that come from the Sidebar (which is now in Layout)
-    // For now, we can listen to a custom event or use a context. 
-    // However, the plan says Sidebar is in Layout. 
-    // If Sidebar is in Layout, how does Sandbox receive actions like "new-file"?
-    // The plan says: "Layout can handle navigation actions."
-    // But "New File" is a Sandbox action.
-    // I should probably use useOutletContext or pass a prop if possible, but Outlet doesn't pass props easily.
-    // A better approach for this refactor:
-    // Layout renders Sidebar. Sidebar emits actions.
-    // Layout handles navigation actions (Documentation).
-    // Layout passes other actions to the Outlet via context?
-    // Or, simpler: The Sidebar is part of the Layout, but the actions need to reach the active route.
-    // Let's use `useOutletContext` from react-router-dom.
-
-    // Wait, I need to define the handleAction here and pass it to the context?
-    // No, the Sidebar is in the Layout. The Layout receives the action from Sidebar.
-    // If it's a global action (nav), Layout handles it.
-    // If it's a local action (editor), Layout needs to tell the Outlet.
-    // I'll implement `useOutletContext` in Sandbox to receive the action.
-
-    // Actually, for simplicity in this step, I'll move the `handleAction` logic to Sandbox
-    // and assume Layout will pass it down via context.
-
-    // Let's write the logic first.
-
     const handleAction = (action: string) => {
         switch (action) {
             case 'new-file':
-                if (window.confirm('Are you sure you want to create a new file? This will clear all current code.')) {
-                    setContent({
-                        html: '',
-                        css: '',
-                        javascript: ''
-                    });
-                }
+                Swal.fire({
+                    title: 'Crear Nuevo Archivo',
+                    text: '¿Estás seguro de que quieres crear un nuevo archivo? Esto borrará todo el código actual.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí',
+                    cancelButtonText: 'No'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        setContent({
+                            html: '',
+                            css: '',
+                            javascript: ''
+                        });
+                        Swal.fire(
+                            '¡Creado!',
+                            'Tu nuevo archivo ha sido creado.',
+                            'success'
+                        );
+                    }
+                });
                 break;
 
-            case 'save-file':
+            case 'save-file': {
                 const blob = new Blob([
                     `<!-- HTML -->\n${content.html}\n\n`,
                     `/* CSS */\n${content.css}\n\n`,
@@ -65,8 +58,9 @@ const Sandbox: React.FC<SandboxProps> = ({ config }) => {
                 a.click();
                 URL.revokeObjectURL(url);
                 break;
+            }
 
-            case 'export-file':
+            case 'export-file': {
                 const htmlBlob = new Blob([
                     `<!DOCTYPE html>
 <html lang="en">
@@ -89,6 +83,7 @@ const Sandbox: React.FC<SandboxProps> = ({ config }) => {
                 htmlLink.click();
                 URL.revokeObjectURL(htmlUrl);
                 break;
+            }
 
             case 'layout-horizontal':
                 setLayoutMode('horizontal');
@@ -104,8 +99,8 @@ const Sandbox: React.FC<SandboxProps> = ({ config }) => {
                 }
                 break;
 
-            case 'font-size':
-                const newSize = prompt('Enter font size (10-24):', fontSize.toString());
+            case 'font-size': {
+                const newSize = prompt('Ingresa el tamaño de fuente (10-24):', fontSize.toString());
                 if (newSize) {
                     const size = parseInt(newSize);
                     if (size >= 10 && size <= 24) {
@@ -113,6 +108,7 @@ const Sandbox: React.FC<SandboxProps> = ({ config }) => {
                     }
                 }
                 break;
+            }
 
             case 'word-wrap':
                 setWordWrap(prev => prev === 'on' ? 'off' : 'on');
@@ -175,39 +171,95 @@ body {
                 });
                 break;
 
+            case 'load-template-dynamic-rain':
+                setContent({
+                    html: `<canvas id="rainCanvas"></canvas>`,
+                    css: `body, html { margin: 0; padding: 0; overflow: hidden; background: #000; }
+#rainCanvas { display: block; width: 100vw; height: 100vh; }`,
+                    javascript: `const canvas = document.getElementById('rainCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+class Drop {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.length = 10 + Math.random() * 20;
+    this.speed = 4 + Math.random() * 4;
+  }
+  fall() {
+    this.y += this.speed;
+    if (this.y > canvas.height) {
+      this.y = 0;
+      this.x = Math.random() * canvas.width;
+    }
+  }
+  draw() {
+    ctx.strokeStyle = 'rgba(0, 150, 255, 0.7)';
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y);
+    ctx.lineTo(this.x, this.y + this.length);
+    ctx.stroke();
+    this.fall();
+  }
+}
+
+const drops = Array.from({length: 150}, () => new Drop());
+
+function animate() {
+  ctx.fillStyle = 'rgba(0,0,0,0.1)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drops.forEach(drop => drop.draw());
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});`
+                });
+                break;
+
             case 'show-shortcuts':
-                alert(`Keyboard Shortcuts:
-        
-• Ctrl/Cmd + S: Save file
-• Alt + Shift + F: Format code
-• F11: Fullscreen
-• Ctrl/Cmd + /: Toggle comment
-• Ctrl/Cmd + D: Duplicate line
-• Tab: Indent
-• Shift + Tab: Outdent`);
+                Swal.fire({
+                    title: 'Atajos',
+                    html: `
+                        <div style="text-align: left;">
+                            <p><strong>Ctrl/Cmd + S:</strong> Guardar archivo</p>
+                            <p><strong>Alt + Shift + F:</strong> Formatear código</p>
+                            <p><strong>F11:</strong> Pantalla completa</p>
+                            <p><strong>Ctrl/Cmd + /:</strong> Alternar comentario</p>
+                            <p><strong>Ctrl/Cmd + D:</strong> Duplicar línea</p>
+                            <p><strong>Tab:</strong> Indentar</p>
+                            <p><strong>Shift + Tab:</strong> Desindentar</p>
+                        </div>
+                    `,
+                    confirmButtonText: 'Cerrar'
+                });
                 break;
 
             case 'show-about':
-                alert(`Code Sandbox v1.0.0
-        
-A powerful online code editor with real-time preview.
-Built with React, TypeScript, and Monaco Editor.
-
-`);
+                Swal.fire({
+                    title: 'Acerca de Code Sandbox',
+                    html: `
+                        <div>
+                            <p><strong>Code Sandbox v1.0.0</strong></p>
+                            <br />
+                            <p>Un potente editor de código en línea con vista previa en tiempo real.</p>
+                            <p>Construido con React, TypeScript y Monaco Editor.</p>
+                        </div>
+                    `,
+                    confirmButtonText: 'Cerrar'
+                });
                 break;
         }
     };
 
-    // Expose handleAction to parent (Layout) via ref or context?
-    // Or better: Layout uses useOutletContext to PASS the action down?
-    // No, Layout receives the action from Sidebar. It needs to call handleAction on the active child.
-    // React Router's useOutletContext allows the parent to pass data to the child.
-    // So Layout can pass the 'lastAction' to the child.
-    // The child (Sandbox) listens to 'lastAction' and executes it.
-
     return (
         <div className={`layout-content ${layoutMode} w-full h-full`}>
-            {/* We will need to wrap this in a component that receives the action from context */}
             <SandboxContent
                 content={content}
                 setContent={setContent}
@@ -222,11 +274,9 @@ Built with React, TypeScript, and Monaco Editor.
     );
 };
 
-// Helper to consume context
-import { useOutletContext } from 'react-router-dom';
-
 const SandboxContent = ({
     content, setContent, activeTab, setActiveTab, fontSize, wordWrap, config, handleAction
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: any) => {
     const { action } = useOutletContext<{ action: string | null }>();
 
@@ -235,7 +285,7 @@ const SandboxContent = ({
         if (action) {
             handleAction(action);
         }
-    }, [action]);
+    }, [action, handleAction]);
 
     return (
         <>
