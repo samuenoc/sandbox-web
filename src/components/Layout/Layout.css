@@ -1,0 +1,93 @@
+.layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.layout-content {
+  flex: 1;
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  min-width: 0;
+  position: relative;
+}
+
+/* keyframe */
+@keyframes borde-neon {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.layout-content>div:first-child,
+.layout-content>div:last-child {
+  background-size: 300% 300%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 3.5px solid transparent;
+  /* Default reactive background for editor panes */
+  background-image: linear-gradient(var(--gradiante-uno), var(--gradiante-dos)),
+    linear-gradient(270deg, var(--gradiante-uno), var(--gradiante-dos), #00fff2);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  animation: borde-neon 3s linear infinite;
+}
+
+/* Override for documentation page - no animated gradient, just solid background */
+.layout-content>.documentation-page {
+  background-image: none !important;
+  background-clip: unset !important;
+  border: none !important;
+  animation: none !important;
+}
+
+.layout-content.horizontal {
+  flex-direction: row;
+}
+
+.layout-content.vertical {
+  flex-direction: column;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .layout {
+    position: relative;
+  }
+
+  .layout-content {
+    flex-direction: column;
+  }
+
+  .layout-content.horizontal {
+    flex-direction: column;
+  }
+}
+
+/* Resizable panes (optional enhancement) */
+.layout-content>* {
+  flex: 1;
+}
+
+@media (min-width: 769px) {
+  .layout-content.horizontal>*:first-child {
+    max-width: 60%;
+    min-width: 30%;
+  }
+
+  .layout-content.vertical>*:first-child {
+    max-height: 70%;
+    min-height: 30%;
+  }
+}

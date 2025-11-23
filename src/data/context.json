@@ -1,0 +1,157 @@
+{
+  "sidebar": {
+    "title": "Sandbox",
+    "subtitle": "Crea a tu gusto",
+    "options": [
+      {
+        "id": "file",
+        "label": "Archivo",
+        "icon": "File",
+        "submenu": [
+          {
+            "id": "new",
+            "label": "Nuevo",
+            "icon": "FilePlus",
+            "action": "new-file"
+          },
+          {
+            "id": "save",
+            "label": "Guardar",
+            "icon": "Save",
+            "action": "save-file"
+          },
+          {
+            "id": "export",
+            "label": "Exportar",
+            "icon": "Download",
+            "action": "export-file"
+          }
+        ]
+      },
+      {
+        "id": "view",
+        "label": "Vista",
+        "icon": "Eye",
+        "submenu": [
+          {
+            "id": "layout-horizontal",
+            "label": "Plantilla Horizontal ",
+            "icon": "Columns",
+            "action": "layout-horizontal"
+          },
+          {
+            "id": "layout-vertical",
+            "label": "Plantilla Vertical ",
+            "icon": "Rows",
+            "action": "layout-vertical"
+          },
+          {
+            "id": "fullscreen",
+            "label": "Toda la Pantalla",
+            "icon": "Maximize",
+            "action": "fullscreen"
+          }
+        ]
+      },
+      {
+        "id": "settings",
+        "label": "Ajustes",
+        "icon": "Settings",
+        "submenu": [
+          {
+            "id": "theme-toggle",
+            "label": "Tema",
+            "icon": "Moon",
+            "action": "toggle-theme"
+          },
+          {
+            "id": "font-size",
+            "label": "Tamaño de Fuente",
+            "icon": "Type",
+            "action": "font-size"
+          },
+          {
+            "id": "word-wrap",
+            "label": "Ajuste de Línea",
+            "icon": "WrapText",
+            "action": "word-wrap"
+          }
+        ]
+      },
+      {
+        "id": "templates",
+        "label": "Ejemplos",
+        "icon": "Code",
+        "submenu": [
+          {
+            "id": "template-basic",
+            "label": "HTML Basico",
+            "icon": "FileCode",
+            "action": "load-template-basic"
+          },
+          {
+            "id": "template-bootstrap",
+            "label": "Bootstrap",
+            "icon": "Package",
+            "action": "load-template-bootstrap"
+          },
+          {
+            "id": "template-tailwind",
+            "label": "Tailwind CSS",
+            "icon": "Wind",
+            "action": "load-template-tailwind"
+          },
+          {
+            "id": "template-dynamic-rain",
+            "label": "Ejercicio Lluvia Dinámica",
+            "icon": "Cloud",
+            "action": "load-template-dynamic-rain"
+          }
+        ]
+      },
+      {
+        "id": "help",
+        "label": "Ayuda",
+        "icon": "BookOpen",
+        "submenu": [
+          {
+            "id": "shortcuts",
+            "label": "Atajos",
+            "icon": "Keyboard",
+            "action": "show-shortcuts"
+          },
+          {
+            "id": "about",
+            "label": "Acerca de",
+            "icon": "Info",
+            "action": "show-about"
+          }
+        ]
+      },
+      {
+        "id": "documentation",
+        "label": "Documentación",
+        "icon": "Book",
+        "action": "navigate-documentation"
+      }
+    ]
+  },
+  "editor": {
+    "defaultContent": {
+      "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Sandbox</title>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Welcome to Code Sandbox</h1>\n    <p>Start coding and see your changes in real-time!</p>\n    <button id=\"clickBtn\">Click Me!</button>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n}\n\n.container {\n  text-align: center;\n  padding: 2rem;\n  background: white;\n  border-radius: 10px;\n  box-shadow: 0 20px 60px rgba(0,0,0,0.3);\n}\n\nh1 {\n  color: #333;\n  margin-bottom: 1rem;\n}\n\np {\n  color: #666;\n  margin-bottom: 1.5rem;\n}\n\nbutton {\n  background: #667eea;\n  color: white;\n  border: none;\n  padding: 10px 30px;\n  font-size: 16px;\n  border-radius: 5px;\n  cursor: pointer;\n  transition: transform 0.3s;\n}\n\nbutton:hover {\n  transform: translateY(-2px);\n  background: #764ba2;\n}",
+      "javascript": "document.getElementById('clickBtn').addEventListener('click', function() {\n  const messages = [\n    'Hello World! 🌍',\n    'Welcome to Code Sandbox! 🚀',\n    'Happy Coding! 💻',\n    'You clicked me! 🎉'\n  ];\n  \n  const randomMessage = messages[Math.floor(Math.random() * messages.length)];\n  \n  alert(randomMessage);\n  \n  // Animate button\n  this.style.transform = 'scale(0.95)';\n  setTimeout(() => {\n    this.style.transform = 'scale(1)';\n  }, 100);\n});\n\nconsole.log('Sandbox loaded successfully!');"
+    },
+    "fontSize": 14,
+    "wordWrap": "on"
+  },
+  "preview": {
+    "refreshDelay": 500
+  },
+  "toggle": {
+    "id": "theme-toggle",
+    "label": "Tema",
+    "icon": "Moon",
+    "action": "toggle-theme"
+  }
+}
