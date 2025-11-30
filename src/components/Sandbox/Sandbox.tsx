@@ -278,12 +278,14 @@ const SandboxContent = ({
     content, setContent, activeTab, setActiveTab, fontSize, wordWrap, config, handleAction
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: any) => {
-    const { action } = useOutletContext<{ action: string | null }>();
+    const { action } = useOutletContext<{ action: { action: string; timestamp: number } | null }>();
+    const lastHandledTimestamp = React.useRef<number>(0);
 
     // React to action changes
     React.useEffect(() => {
-        if (action) {
-            handleAction(action);
+        if (action && action.timestamp > lastHandledTimestamp.current) {
+            lastHandledTimestamp.current = action.timestamp;
+            handleAction(action.action);
         }
     }, [action, handleAction]);
 
