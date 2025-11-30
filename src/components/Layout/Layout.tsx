@@ -27,7 +27,7 @@ const Layout: React.FC<LayoutProps> = ({ config }) => {
     <div className="layout">
       <Sidebar config={{ ...config.sidebar, subtitle: config.sidebar.subtitle, toggle: config.toggle }} onAction={handleAction} />
       <div className="layout-content">
-        <Outlet context={{ action: lastAction?.action }} />
+        <Outlet context={{ action: lastAction }} />
       </div>
     </div>
   );
